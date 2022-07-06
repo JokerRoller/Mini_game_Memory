@@ -60,11 +60,3 @@ function createBoard () {
     }
 }
 createBoard()
-function test() {
-    var test =  document.querySelector('.test')
-    var test2 = document.createElement('img')
-    test.setAttribute('scr', 'images/blank.png')
-    test.appendChild(test2)
-    e.preventDefault()
-}
-test()
