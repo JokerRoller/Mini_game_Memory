@@ -25,9 +25,10 @@ var chosenCard = [];
 var chosenClass = [];
 var chosenCardId = [];
 var matchedCards = [];
+var gameOnOff = 0;
 
 // Event Listeners
-gridDisplay.addEventListener('click', cardClick);
+gridDisplay.addEventListener('click', mainFunctionActivator);
 // Functions
 // randomize array layout
 cardArray.sort(()=> 0.5 - Math.random());
@@ -51,10 +52,16 @@ board woud rotate */
 cards.forEach((card)=>{
     card.style.pointerEvents = 'all'
 })   
+function mainFunctionActivator(e) {
+    var clicked = e.target
+    if (gameOnOff !== -1) {
+        cardClick(clicked)
+    }
+}
 // on click rotate card and check match
 function cardClick(e) {
     // clicked div
-    var clickedCard = e.target;
+    var clickedCard = e
     //clicked div data-id
     var clickedCardDataId = clickedCard.getAttribute('data-id');
     // this if needed to no click on alredy clicked image again
@@ -79,14 +86,18 @@ function cardClick(e) {
             cards.forEach((card)=>{
                 card.style.pointerEvents = 'none'
             })
-            /* checks if chosen cards ar match if yes make them oppacity 0.7
-            if not turns blank back */
+            // checks if chosen cards ar match if yes make them oppacity 0.7
            if(chosenCard[0] === chosenCard[1]){
             cards[chosenCardId[0]].style.opacity = '0.7';
             cards[chosenCardId[1]].style.opacity = '0.7';
+            // count matched cards
+            matchedCards.push(chosenCard[0])
+            matchedCards.push(chosenCard[1])
+            //clear counter arrays to do same on another click
             chosenCard = [];
             chosenCardId = [];
             chosenClass = [];
+            //if cards are not matched make tham face down agains
         } else {
             setTimeout(()=>{
                 cards[chosenCardId[0]].classList.remove(chosenClass[0])
@@ -106,5 +117,8 @@ function cardClick(e) {
         break;
 
 }
-
+        if (matchedCards.length === 16) {
+            alert('u won')
+            gameOnOff = -1;
+        }
 }}
