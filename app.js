@@ -21,13 +21,19 @@ const cardArray = [
 var gridDisplay = document.querySelector('#grid');
 var startBtn = document.querySelector('.start-btn');
 var restartBtn = document.querySelector('.restart-btn');
+var time = document.querySelector('.time-span');
+var movesGame = document.querySelector('.move-span');
 var chosenCard = [];
 var chosenClass = [];
 var chosenCardId = [];
 var matchedCards = [];
-var gameOnOff = 0;
+var eTime = 0
+var moves = 0
+var gameOnOff = -1;
 
 // Event Listeners
+startBtn.addEventListener('click', gameStart);
+restartBtn.addEventListener('click', gameRestart);
 gridDisplay.addEventListener('click', mainFunctionActivator);
 // Functions
 // randomize array layout
@@ -39,8 +45,6 @@ function createBoard () {
        card.classList.add('blank')
        card.setAttribute('data-id', i)
        gridDisplay.appendChild(card)
-       startBtn.style.display = 'none'
-       restartBtn.style.display = 'block'
     }
 }
 createBoard() 
@@ -51,7 +55,21 @@ if i woud not done it than when i woud click on emty space between cards whole
 board woud rotate */
 cards.forEach((card)=>{
     card.style.pointerEvents = 'all'
-})   
+})  
+// start btn (start game)
+function gameStart () {
+    gameOnOff = 0
+    startBtn.style.opacity = '0.1'
+    startBtn.style.pointerEvents = 'none'
+    restartBtn.style.pointerEvents = 'all'
+    restartBtn.style.opacity = '1'
+    stopWatch()
+} 
+// restart game
+function gameRestart () {
+    location.reload()
+}
+// make code posible to run and than end it
 function mainFunctionActivator(e) {
     var clicked = e.target
     if (gameOnOff !== -1) {
@@ -97,6 +115,8 @@ function cardClick(e) {
             chosenCard = [];
             chosenCardId = [];
             chosenClass = [];
+            moves += 1;
+            movesGame.innerHTML = moves
             //if cards are not matched make tham face down agains
         } else {
             setTimeout(()=>{
@@ -105,6 +125,8 @@ function cardClick(e) {
                 chosenCard = [];
                 chosenCardId = [];
                 chosenClass = [];
+                moves += 1;
+                movesGame.innerHTML = moves
             }, 1000)
            
         }
@@ -118,7 +140,24 @@ function cardClick(e) {
 
 }
         if (matchedCards.length === 16) {
-            alert('u won')
-            gameOnOff = -1;
+            setTimeout(()=>{
+                alert(`Your time is ${eTime}s\nMove count: ${moves}`)
+                gameOnOff = -1;
+            }, 500)
         }
 }}
+// Stopwatch for game score
+function stopWatch () {
+    const interval = setInterval(()=>{
+        eTime += 1
+        time.innerHTML = eTime
+        if (gameOnOff == -1) {
+            clearInterval(interval)
+            moves = 0;
+            eTime = 0;
+            time.innerHTML = eTime;
+            movesGame.innerHTML = moves;
+        }
+    },1000)
+
+}
